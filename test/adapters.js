@@ -1,9 +1,12 @@
 'use strict';
 
-api.metatests.test('callbackify: Promise to callback-last', (test) => {
+const metasync = require('..');
+const metatests = require('metatests');
+
+metatests.test('callbackify: Promise to callback-last', (test) => {
 
   const promise = Promise.resolve('result');
-  const callback = api.metasync.callbackify(promise);
+  const callback = metasync.callbackify(promise);
 
   callback((err, value) => {
     if (err) throw err;
@@ -13,10 +16,10 @@ api.metatests.test('callbackify: Promise to callback-last', (test) => {
 
 });
 
-api.metatests.test('callbackify: sync function to callback-last', (test) => {
+metatests.test('callbackify: sync function to callback-last', (test) => {
 
   const source = par => par;
-  const callback = api.metasync.callbackify(source);
+  const callback = metasync.callbackify(source);
 
   callback('result', (err, value) => {
     if (err) throw err;
@@ -26,7 +29,7 @@ api.metatests.test('callbackify: sync function to callback-last', (test) => {
 
 });
 
-api.metatests.test('promisify: callback-last to Promise', (test) => {
+metatests.test('promisify: callback-last to Promise', (test) => {
 
   const id = 100;
   const data = { key: 'value' };
@@ -36,7 +39,7 @@ api.metatests.test('promisify: callback-last to Promise', (test) => {
     callback(null, data);
   };
 
-  const getDataPromise = api.metasync.promisify(getDataAsync);
+  const getDataPromise = metasync.promisify(getDataAsync);
   getDataPromise(id).then(result => {
     test.strictSame(result, data);
     test.end();
@@ -46,7 +49,7 @@ api.metatests.test('promisify: callback-last to Promise', (test) => {
 
 });
 
-api.metatests.test('promisify: callback-last to Promise throw', (test) => {
+metatests.test('promisify: callback-last to Promise throw', (test) => {
 
   const id = 100;
 
@@ -55,7 +58,7 @@ api.metatests.test('promisify: callback-last to Promise throw', (test) => {
     callback(new Error('Data not found'));
   };
 
-  const getDataPromise = api.metasync.promisify(getDataAsync);
+  const getDataPromise = metasync.promisify(getDataAsync);
   getDataPromise(id).then(result => {
     test.notOk(result);
   }).catch(err => {
@@ -66,7 +69,7 @@ api.metatests.test('promisify: callback-last to Promise throw', (test) => {
 });
 
 
-api.metatests.test('promisify: sync function to Promise', (test) => {
+metatests.test('promisify: sync function to Promise', (test) => {
 
   const id = 100;
   const data = { key: 'value' };
@@ -76,7 +79,7 @@ api.metatests.test('promisify: sync function to Promise', (test) => {
     return data;
   };
 
-  const getDataPromise = api.metasync.promisifySync(getDataSync);
+  const getDataPromise = metasync.promisifySync(getDataSync);
   getDataPromise(id).then(result => {
     test.strictSame(result, data);
     test.end();
@@ -86,7 +89,7 @@ api.metatests.test('promisify: sync function to Promise', (test) => {
 
 });
 
-api.metatests.test('promisify: sync to Promise throw', (test) => {
+metatests.test('promisify: sync to Promise throw', (test) => {
 
   const id = 100;
 
@@ -95,7 +98,7 @@ api.metatests.test('promisify: sync to Promise throw', (test) => {
     return new Error('Data not found');
   };
 
-  const getDataPromise = api.metasync.promisifySync(getDataSync);
+  const getDataPromise = metasync.promisifySync(getDataSync);
   getDataPromise(id).then(result => {
     test.notOk(result);
   }).catch(err => {

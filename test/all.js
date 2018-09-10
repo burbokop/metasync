@@ -1,14 +1,5 @@
 'use strict';
 
-const metatests = require('metatests');
-const common = require('metarhia-common');
-const metasync = require('..');
-const events = require('events');
-
-global.api = { common, events, metatests, metasync };
-
-api.metatests.namespace({ metasync });
-
 const all = [
   'adapters', 'all', 'chain', 'collectors',
   'array.each', 'array.every', 'array.filter',
@@ -22,4 +13,3 @@ const all = [
 
 all.forEach(name => require('./' + name));
 
-api.metatests.report();
